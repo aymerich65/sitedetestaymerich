@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { useNavigate } from "react-router-dom"
+import { auth, logOut } from "./firebase"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function Home(){
+
+    const [user, loading, error] = useAuthState(auth)
+    const navigate = useNavigate()
+ 
+    useEffect(() => {
+      if (loading) return
+      if (!user) return navigate("/")
+    },[user, loading])
+
+    return (
+      <div>
+            <h2>Connecté avec le mail :</h2>
+            <span>{user?.email}</span>
+            <button onClick={logOut}>Déconnexion</button>
+       </div>
+    )   
 }
-
-export default App;
